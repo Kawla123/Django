@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Articles</title>
+</head>
+<body>
+    <h1>Liste des Articles</h1>
+    
+    <a href="{% url 'blogpost-create' %}">Créer un nouvel article</a>
+    
+    <p>Total des articles : {{ total_posts }}</p>
+    
+    <hr>
+    
+    {% if posts %}
+        {% for post in posts %}
+        <div>
+            <h2>{{ post.title }}</h2>
+            <p>Par {{ post.author.name }} | {{ post.created_at|date:"d/m/Y H:i" }}</p>
+            {% if post.published %}
+                <p>Statut : Publié</p>
+            {% else %}
+                <p>Statut : Brouillon</p>
+            {% endif %}
+            <p>{{ post.content|truncatewords:30 }}</p>
+            
+            <a href="{% url 'blogpost-detail' post.pk %}">Voir</a> | 
+            <a href="{% url 'blogpost-update' post.pk %}">Modifier</a> | 
+            <a href="{% url 'blogpost-delete' post.pk %}">Supprimer</a>
+            
+            <hr>
+        </div>
+        {% endfor %}
+        
+        {% if is_paginated %}
+        <p>
+            {% if page_obj.has_previous %}
+                <a href="?page=1">Première</a> | 
+                <a href="?page={{ page_obj.previous_page_number }}">Précédente</a> | 
+            {% endif %}
+            
+            Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+            
+            {% if page_obj.has_next %}
+                | <a href="?page={{ page_obj.next_page_number }}">Suivante</a> | 
+                <a href="?page={{ page_obj.paginator.num_pages }}">Dernière</a>
+            {% endif %}
+        </p>
+        {% endif %}
+    {% else %}
+        <p>Aucun article pour le moment.</p>
+    {% endif %}
+</body>
+</html>

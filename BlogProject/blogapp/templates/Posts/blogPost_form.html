@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% if object %}Modifier{% else %}Créer{% endif %} un article</title>
+</head>
+<body>
+    <h1>{% if object %}Modifier un article{% else %}Créer un article{% endif %}</h1>
+    
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Enregistrer</button>
+        <a href="{% url 'blogpost-list' %}">Annuler</a>
+    </form>
+</body>
+</html>

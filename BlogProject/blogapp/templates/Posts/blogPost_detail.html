@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ post.title }}</title>
+</head>
+<body>
+    <h1>{{ post.title }}</h1>
+    
+    <p>Par {{ post.author.name }} ({{ post.author.email }})</p>
+    <p>Publié le {{ post.created_at|date:"d/m/Y à H:i" }}</p>
+    
+    {% if post.updated_at != post.created_at %}
+        <p>Modifié le {{ post.updated_at|date:"d/m/Y à H:i" }}</p>
+    {% endif %}
+    
+    {% if post.published %}
+        <p>Statut : Publié</p>
+    {% else %}
+        <p>Statut : Brouillon</p>
+    {% endif %}
+    
+    <hr>
+    
+    <p>{{ post.content|linebreaks }}</p>
+    
+    <hr>
+    
+    <a href="{% url 'blogpost-list' %}">Retour à la liste</a> | 
+    <a href="{% url 'blogpost-update' post.pk %}">Modifier</a> | 
+    <a href="{% url 'blogpost-delete' post.pk %}">Supprimer</a>
+</body>
+</html>

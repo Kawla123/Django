@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Supprimer un article</title>
+</head>
+<body>
+    <h1>Confirmer la suppression</h1>
+    
+    <p>Êtes-vous sûr de vouloir supprimer l'article :</p>
+    <h2>"{{ object.title }}"</h2>
+    <p>Cette action est irréversible.</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Oui, supprimer</button>
+        <a href="{% url 'blogpost-detail' object.pk %}">Annuler</a>
+    </form>
+</body>
+</html>
