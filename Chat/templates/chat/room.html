@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat Room</title>
+    <style>
+        body { font-family: Arial; background: #f0f2f5; padding: 20px; }
+        #chat-box {
+            width: 500px; margin: auto; background: white; padding: 15px;
+            border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        #messages {
+            height: 300px; overflow-y: auto; padding: 10px;
+            background: #fafafa; border: 1px solid #ddd; border-radius: 6px;
+        }
+        .msg {
+            margin: 10px 0; padding: 8px;
+            background: #e7f3ff; border-left: 4px solid #0078ff; border-radius: 4px;
+        }
+        .system {
+            color: #777; margin: 5px 0; font-style: italic;
+        }
+        input, button { padding: 10px; margin-top: 10px; }
+        #messageInput { width: 75%; }
+    </style>
+</head>
+<body>
+
+<div id="chat-box">
+    <h2>💬 Salon : {{ room_name }}</h2>
+
+    <div id="messages"></div>
+
+    <input id="messageInput" placeholder="Votre message..." />
+    <button onclick="sendMessage()">Envoyer</button>
+</div>
+
+<script>
+    const roomName = "{{ room_name }}";
+    const username = new URLSearchParams(window.location.search).get("username");
+
+    const socket = new WebSocket("ws://" + window.location.host + "/ws/chat/" + roomName + "/");
+
+    socket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        const messages = document.getElementById("messages");
+
+        const div = document.createElement("div");
+        div.classList.add(data.username === "SYSTEM" ? "system" : "msg");
+
+        div.innerHTML = `[${data.time}] <strong>${data.username}</strong> : ${data.message}`;
+        messages.appendChild(div);
+
+        messages.scrollTop = messages.scrollHeight;
+    };
+
+    function sendMessage() {
+        const input = document.getElementById("messageInput");
+        socket.send(JSON.stringify({
+            "username": username,
+            "message": input.value
+        }));
+        input.value = "";
+    }
+</script>
+
+</body>
+</html>
